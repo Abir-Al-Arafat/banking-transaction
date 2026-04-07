@@ -1,5 +1,5 @@
 {
-  "name": "Concurrent Banking Transaction System",
+  "name": "concurrent-banking-transaction-system",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
