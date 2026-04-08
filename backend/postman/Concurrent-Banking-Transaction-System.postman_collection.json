@@ -1,0 +1,219 @@
+{
+  "info": {
+    "_postman_id": "8f2bcf4e-2e9b-4a22-9c46-3e3d6b62a89e",
+    "name": "Concurrent Banking Transaction System",
+    "description": "Postman collection for backend APIs in the Concurrent Banking Transaction System project.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Checks if the server is up and running."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Accounts",
+      "item": [
+        {
+          "name": "Create Account 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": \"{{accountId1}}\",\n  \"holderName\": \"John Doe\",\n  \"initialBalance\": 1000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/accounts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "accounts"]
+            },
+            "description": "Creates primary test account."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Account 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": \"{{accountId2}}\",\n  \"holderName\": \"Jane Doe\",\n  \"initialBalance\": 500\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/accounts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "accounts"]
+            },
+            "description": "Creates secondary test account."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Account 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/accounts/{{accountId1}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "accounts", "{{accountId1}}"]
+            },
+            "description": "Fetches account details by account ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Account 2",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/accounts/{{accountId2}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "accounts", "{{accountId2}}"]
+            },
+            "description": "Fetches second account details by account ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Deposit to Account 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"deposit\",\n  \"amount\": 200,\n  \"accountId\": \"{{accountId1}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/transactions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "transactions"]
+            },
+            "description": "Creates a deposit transaction."
+          },
+          "response": []
+        },
+        {
+          "name": "Withdraw from Account 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"withdraw\",\n  \"amount\": 150,\n  \"accountId\": \"{{accountId1}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/transactions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "transactions"]
+            },
+            "description": "Creates a withdrawal transaction."
+          },
+          "response": []
+        },
+        {
+          "name": "Transfer Account 1 -> Account 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"transfer\",\n  \"amount\": 100,\n  \"fromAccountId\": \"{{accountId1}}\",\n  \"toAccountId\": \"{{accountId2}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/transactions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "transactions"]
+            },
+            "description": "Transfers funds between accounts."
+          },
+          "response": []
+        },
+        {
+          "name": "Failed Withdraw (Insufficient Balance)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"withdraw\",\n  \"amount\": 999999,\n  \"accountId\": \"{{accountId1}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/transactions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "transactions"]
+            },
+            "description": "Negative test for insufficient balance and transaction:failed socket event."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "accountId1",
+      "value": "ACC1001"
+    },
+    {
+      "key": "accountId2",
+      "value": "ACC2001"
+    }
+  ]
+}
