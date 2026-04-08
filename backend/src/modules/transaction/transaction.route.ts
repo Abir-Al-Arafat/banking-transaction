@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { asyncHandler } from "../../core/utils/asyncHandler";
 import { validateRequestMiddleware } from "../../middlewares/validateRequest.middleware";
+import { socketService } from "../../realtime/socket.service";
 import { AccountRepository } from "../account/account.repository";
 import { TransactionController } from "./transaction.controller";
 import { TransactionRepository } from "./transaction.repository";
@@ -12,6 +13,7 @@ const transactionRepository = new TransactionRepository();
 const transactionService = new TransactionService(
   accountRepository,
   transactionRepository,
+  socketService,
 );
 const transactionController = new TransactionController(transactionService);
 
