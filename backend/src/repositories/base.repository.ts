@@ -33,7 +33,9 @@ export abstract class BaseRepository<TSchema> {
     update: Record<string, unknown>,
     session?: ClientSession,
   ) {
-    const query = this.model.findOneAndUpdate(filter, update, { new: true });
+    const query = this.model.findOneAndUpdate(filter, update, {
+      returnDocument: "after",
+    });
     if (session) {
       query.session(session);
     }

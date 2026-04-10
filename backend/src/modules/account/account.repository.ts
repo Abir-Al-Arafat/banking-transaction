@@ -32,7 +32,7 @@ export class AccountRepository extends BaseRepository<Account> {
           version: 1,
         },
       },
-      { new: true },
+      { returnDocument: "after" },
     );
 
     if (session) {
