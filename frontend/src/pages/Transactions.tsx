@@ -1,24 +1,60 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { Card } from "../components/atoms";
 import { TransactionForm } from "../components/molecules";
-import { transactionService } from "../services";
+import { useTransactions } from "../hooks";
+import { TransactionType } from "../types";
+
+function toTransactionPayload(payload: Record<string, unknown>) {
+  const type = payload.type as TransactionType;
+  const amount = Number(payload.amount);
+
+  return {
+    type,
+    amount,
+    accountId: payload.accountId as string | undefined,
+    fromAccountId: payload.fromAccountId as string | undefined,
+    toAccountId: payload.toAccountId as string | undefined,
+  };
+}
 
 export const TransactionsPage: FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    recentTransactions,
+    isLoading,
+    error,
+    statusMessage,
+    submitTransaction,
+    clearError,
+  } = useTransactions();
 
   const handleTransaction = async (payload: Record<string, unknown>) => {
-    setIsLoading(true);
-    try {
-      await transactionService.create(
-        payload as Parameters<typeof transactionService.create>[0],
-      );
-    } finally {
-      setIsLoading(false);
-    }
+    await submitTransaction(toTransactionPayload(payload));
   };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {error && (
+        <div className="lg:col-span-3">
+          <Card className="border border-red-200 bg-red-50">
+            <p className="text-sm text-red-700">{error}</p>
+            <button
+              className="mt-2 text-xs font-semibold text-red-700 underline"
+              onClick={clearError}
+            >
+              Dismiss
+            </button>
+          </Card>
+        </div>
+      )}
+
+      {!error && statusMessage && (
+        <div className="lg:col-span-3">
+          <Card className="border border-green-200 bg-green-50">
+            <p className="text-sm text-green-700">{statusMessage}</p>
+          </Card>
+        </div>
+      )}
+
       <div>
         <TransactionForm
           type="deposit"
@@ -58,6 +94,31 @@ export const TransactionsPage: FC = () => {
               <p>Send funds between two different accounts</p>
             </div>
           </div>
+        </Card>
+      </div>
+
+      <div className="lg:col-span-3">
+        <Card>
+          <h2 className="text-xl font-bold mb-4">Recent Transactions</h2>
+          {recentTransactions.length === 0 ? (
+            <p className="text-sm text-gray-500">No transactions yet.</p>
+          ) : (
+            <div className="space-y-2">
+              {recentTransactions.map((item, index) => (
+                <div
+                  key={`${item._id || item.type}-${index}`}
+                  className="flex items-center justify-between rounded-md bg-gray-50 px-3 py-2 text-sm"
+                >
+                  <span className="font-medium capitalize">{item.type}</span>
+                  <span>${item.amount.toFixed(2)}</span>
+                  <span className="text-gray-500">
+                    {item.accountId ||
+                      `${item.fromAccountId} -> ${item.toAccountId}`}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </Card>
       </div>
     </div>
