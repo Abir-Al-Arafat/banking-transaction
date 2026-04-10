@@ -1,53 +1,52 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { Card } from "../components/atoms";
 import { AccountForm } from "../components/molecules";
 import { AccountCard } from "../components/organisms";
-import { accountService } from "../services";
+import { useAccounts } from "../hooks";
 
 export const AccountsPage: FC = () => {
-  const [accounts, setAccounts] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedAccountDetails, setSelectedAccountDetails] =
-    useState<any>(null);
-
-  const handleCreateAccount = async (data: {
-    accountId: string;
-    holderName: string;
-    initialBalance: number;
-  }) => {
-    setIsLoading(true);
-    try {
-      const newAccount = await accountService.create(
-        data.accountId,
-        data.holderName,
-        data.initialBalance,
-      );
-      setAccounts((prev) => [...prev, newAccount]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleViewDetails = async (accountId: string) => {
-    try {
-      const account = await accountService.getById(accountId);
-      setSelectedAccountDetails(account);
-    } catch (error) {
-      console.error("Failed to fetch account details");
-    }
-  };
+  const {
+    accounts,
+    selectedAccount,
+    isLoading,
+    isFetchingDetails,
+    error,
+    statusMessage,
+    createAccount,
+    getAccountDetails,
+    clearErrors,
+  } = useAccounts();
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2">
         <div className="mb-6">
           <h2 className="text-2xl font-bold mb-4">Accounts</h2>
+
+          {error && (
+            <Card className="mb-4 border border-red-200 bg-red-50">
+              <p className="text-sm text-red-700">{error}</p>
+              <button
+                className="mt-2 text-xs font-semibold text-red-700 underline"
+                onClick={clearErrors}
+              >
+                Dismiss
+              </button>
+            </Card>
+          )}
+
+          {!error && statusMessage && (
+            <Card className="mb-4 border border-green-200 bg-green-50">
+              <p className="text-sm text-green-700">{statusMessage}</p>
+            </Card>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {accounts.map((account) => (
               <AccountCard
                 key={account.accountId}
                 account={account}
-                onViewDetails={handleViewDetails}
+                onViewDetails={getAccountDetails}
               />
             ))}
           </div>
@@ -60,26 +59,33 @@ export const AccountsPage: FC = () => {
       </div>
 
       <div>
-        <AccountForm onSubmit={handleCreateAccount} isLoading={isLoading} />
-        {selectedAccountDetails && (
+        <AccountForm onSubmit={createAccount} isLoading={isLoading} />
+
+        {isFetchingDetails && (
+          <Card className="mt-6">
+            <p className="text-sm text-gray-600">Loading account details...</p>
+          </Card>
+        )}
+
+        {selectedAccount && (
           <Card className="mt-6">
             <h3 className="text-lg font-bold mb-4">Account Details</h3>
             <div className="space-y-2 text-sm">
               <p>
                 <span className="font-semibold">ID:</span>{" "}
-                {selectedAccountDetails.accountId}
+                {selectedAccount.accountId}
               </p>
               <p>
                 <span className="font-semibold">Holder:</span>{" "}
-                {selectedAccountDetails.holderName}
+                {selectedAccount.holderName}
               </p>
               <p>
                 <span className="font-semibold">Balance:</span> $
-                {selectedAccountDetails.balance.toFixed(2)}
+                {selectedAccount.balance.toFixed(2)}
               </p>
               <p>
                 <span className="font-semibold">Version:</span>{" "}
-                {selectedAccountDetails.version}
+                {selectedAccount.version}
               </p>
             </div>
           </Card>
