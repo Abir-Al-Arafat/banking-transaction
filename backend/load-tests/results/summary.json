@@ -1,0 +1,23 @@
+{
+  "runAt": "2026-04-10T11:28:28.971Z",
+  "baseUrl": "http://localhost:5000",
+  "vus": 100,
+  "duration": "20s",
+  "accountCount": 1000,
+  "requestTimeout": "5s",
+  "setupTimeout": "10m",
+  "thinkTimeMs": 300,
+  "metrics": {
+    "http_req_duration_p95": 3973.319725000001,
+    "http_req_failed_rate": 0.01740506329113924,
+    "checks_rate": 0.9782930439072521,
+    "txn_success_count": 483,
+    "txn_business_failure_count": 0,
+    "txn_system_failure_count": 44,
+    "consistency_failure_rate": 0,
+    "txn_status_2xx_count": 483,
+    "txn_status_4xx_count": 0,
+    "txn_status_5xx_count": 0,
+    "txn_status_0_count": 44
+  }
+}
