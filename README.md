@@ -75,6 +75,8 @@ npm start
 - `npm run build` - compile TypeScript
 - `npm start` - run compiled output
 - `npm run socket:test` - run the Socket.IO test client
+- `npm run load:test` - run the k6 load test script
+- `npm run load:test:1000` - run the 1000-concurrency k6 scenario
 
 ## Backend Documentation
 
@@ -82,6 +84,7 @@ npm start
 - [API reference](backend/docs/api-reference.md)
 - [Realtime Socket.IO testing guide](backend/docs/realtime-socket-testing.md)
 - [End-to-end test flow](backend/docs/end-to-end-test-flow.md)
+- [Load testing report template](backend/docs/load-testing.md)
 
 ## Quick Verification Flow
 
