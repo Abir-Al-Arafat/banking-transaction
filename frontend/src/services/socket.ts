@@ -1,11 +1,12 @@
 import { io, Socket } from "socket.io-client";
+import { SERVER_URL } from "./http";
 
 let socket: Socket | null = null;
 
 export const socketService = {
   connect: (): Socket => {
     if (socket) return socket;
-    socket = io("http://localhost:5000", {
+    socket = io(SERVER_URL, {
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,

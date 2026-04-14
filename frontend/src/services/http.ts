@@ -1,6 +1,12 @@
 import { APIResponse } from "../types";
 
-export const API_BASE = "/api/v1";
+const DEFAULT_SERVER_URL = "http://localhost:5000";
+
+export const SERVER_URL = (
+  import.meta.env.VITE_SERVER_URL || DEFAULT_SERVER_URL
+).replace(/\/$/, "");
+
+export const API_BASE = `${SERVER_URL}/api/v1`;
 
 export async function requestJson<T>(
   url: string,
